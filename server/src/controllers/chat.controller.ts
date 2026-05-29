@@ -32,30 +32,34 @@ export const addMessage = async (req: any, res: any) => {
       });
     }
 
-    chat.messages.push({
-      role,
-      content,
-      timestamp: new Date(),
-    });
-
     const result = await astroGraph.invoke({
-      userId,
-      messages: [
-        {
-          role: "user",
-          content,
-        },
-      ],
+      message: content
     });
 
     console.log(result);
+
+    if (result) {
+      chat.messages.push({
+        role,
+        content: result.message,
+        timestamp: new Date(),
+      });
+
+      chat.messages.push({
+        role:"assistant",
+        content: result.response,
+        timestamp: new Date(),
+      });
+    }
 
     await chat.save();
 
     res.status(200).json({
       success: true,
+      response: "done",
     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       success: false,
       message: "Failed to save message",
