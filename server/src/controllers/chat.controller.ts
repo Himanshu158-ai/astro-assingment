@@ -1,4 +1,5 @@
 import Chat from "../models/chat.js";
+import { astroGraph } from "../graph/astroGraph.js";
 
 export const chatHistory = async (req: any, res: any) => {
   try {
@@ -11,7 +12,7 @@ export const chatHistory = async (req: any, res: any) => {
       messages: chat?.messages || [],
     });
   } catch (error) {
-    res.status(500).json({  
+    res.status(500).json({
       success: false,
       message: "Failed to fetch chat",
     });
@@ -36,6 +37,18 @@ export const addMessage = async (req: any, res: any) => {
       content,
       timestamp: new Date(),
     });
+
+    const result = await astroGraph.invoke({
+      userId,
+      messages: [
+        {
+          role: "user",
+          content,
+        },
+      ],
+    });
+
+    console.log(result);
 
     await chat.save();
 
