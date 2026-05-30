@@ -47,6 +47,7 @@ export async function toolNode(state: AgentStateType) {
     );
 
     return {
+      birthChart: chart,
       knowledge: knowledge.answer,
     };
   }

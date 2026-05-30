@@ -23,12 +23,12 @@ export const addMessage = async (req: any, res: any) => {
   try {
     const { userId, role } = req.body;
     const userMessageContent = req.body.content || req.body.message;
-    const chat = await Chat.findOne({ userId });
+    let chat = await Chat.findOne({ userId });
 
     if (!chat) {
-      return res.status(404).json({
-        success: false,
-        message: "Chat not found",
+      chat = await Chat.create({
+        userId,
+        messages: [],
       });
     }
 
@@ -64,7 +64,7 @@ export const addMessage = async (req: any, res: any) => {
     console.log(error)
     res.status(500).json({
       success: false,
-      message: error,
+      message: error.message || String(error),
     });
   }
 };

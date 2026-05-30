@@ -32,8 +32,8 @@ Return only the intent.
 
     const result = content.trim().toLowerCase();
 
-    if (result === "birth_chart") intent = "birth_chart";
-    if (result === "knowledge_lookup") intent = "knowledge_lookup";
+    if (result.includes("birth_chart")) intent = "birth_chart";
+    else if (result.includes("knowledge_lookup")) intent = "knowledge_lookup";
 
     return { intent };
 }

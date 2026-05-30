@@ -8,6 +8,7 @@ export const AgentState = Annotation.Root({
   intent: Annotation<string>(),
   birthChart: Annotation<any>(),
   knowledge: Annotation<string>(),
+  error: Annotation<string>(),
 });
 
 export type AgentStateType = typeof AgentState.State;
