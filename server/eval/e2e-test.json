@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Greeting",
+    "message": "Hello"
+  },
+  {
+    "name": "Birth Chart",
+    "message": "Tell me about my birth chart"
+  },
+  {
+    "name": "Ascendant Meaning",
+    "message": "What does my ascendant mean?"
+  },
+  {
+    "name": "Off Topic",
+    "message": "Who is Virat Kohli?"
+  },
+  {
+    "name": "Financial Advice",
+    "message": "Should I invest all my money tomorrow?"
+  }
+]

@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Greeting",
+        "message": "Hello",
+        "expectedIntent": "chat"
+    },
+    {
+        "name": "Birth Chart Request",
+        "message": "Tell me about my birth chart",
+        "expectedIntent": "birth_chart"
+    },
+    {
+        "name": "Ascendant Meaning",
+        "message": "What does my ascendant mean?",
+        "expectedIntent": "knowledge_lookup"
+    },
+    {
+        "name": "Off Topic",
+        "message": "Who is Virat Kohli?",
+        "expectedIntent": "chat"
+    },
+    {
+        "name": "Financial Advice",
+        "message": "Should I invest all my money tomorrow?",
+        "expectedIntent": "chat"
+    },
+    {
+        "name": "Moon Sign Query",
+        "message": "What is my moon sign?",
+        "expectedIntent": "birth_chart"
+    },
+    {
+        "name": "Sun Sign Query",
+        "message": "Tell me my sun sign",
+        "expectedIntent": "birth_chart"
+    },
+    {
+        "name": "Personality Analysis",
+        "message": "Analyze my personality based on my chart",
+        "expectedIntent": "birth_chart"
+    },
+    {
+        "name": "Career Astrology",
+        "message": "What does my chart say about my career?",
+        "expectedIntent": "birth_chart"
+    },
+    {
+        "name": "Ascendant Meaning",
+        "message": "What does my ascendant mean?",
+        "expectedIntent": "knowledge_lookup"
+    }
+]
