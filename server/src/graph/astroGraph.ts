@@ -12,7 +12,7 @@ export const astroGraph: CompiledStateGraph<any, any, any> = new StateGraph(Agen
   .addEdge(START, "routerNode")
   .addConditionalEdges(
     "routerNode",
-    (state) => state.intent === "chat"
+    (state) => state.intent === "chat" || state.intent === "daily_transits"
       ? "chatNode"
       : "toolNode"
   )

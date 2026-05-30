@@ -11,6 +11,11 @@ export async function chatNode(state: AgentStateType) {
       response: `I'm sorry, I couldn't retrieve the astrology data because: ${state.error}. Please check your birth details.`,
     };
   }
+  if(state.intent==="daily_transits"){
+    return{
+      response: `Real-time transit analysis is not available in this version.`,
+    }
+  }
 
   const prompt = `
 You are Aradhana AI, a specialized astrology assistant.
