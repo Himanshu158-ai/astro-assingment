@@ -15,10 +15,11 @@ export const createUser = async (req: any, res: any) => {
       success: true,
       userId: user._id,
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Create user failed:", error);
     res.status(500).json({
       success: false,
-      message: "Failed to create user",
+      message: error.message || String(error),
     });
   }
 };

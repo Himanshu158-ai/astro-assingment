@@ -6,7 +6,6 @@ export async function routerNode(state: AgentStateType) {
     console.log("ROUTERNODE");
 
     let intent = "chat";
-    
     const prompt = `
 Classify the user's intent.
 
@@ -21,19 +20,24 @@ ${state.message}
 Return only the intent.
 `;
 
-    const response = await cohereChat.invoke(prompt);
+    try {
+        const response = await cohereChat.invoke(prompt);
 
-    const content =
-      typeof response.content === "string"
-        ? response.content
-        : response.content
-          .map((c: any) => ("text" in c ? c.text : ""))
-          .join("");
+        const content =
+          typeof response.content === "string"
+            ? response.content
+            : response.content
+              .map((c: any) => ("text" in c ? c.text : ""))
+              .join("");
 
-    const result = content.trim().toLowerCase();
+        const result = content.trim().toLowerCase();
 
-    if (result.includes("birth_chart")) intent = "birth_chart";
-    else if (result.includes("knowledge_lookup")) intent = "knowledge_lookup";
+        if (result.includes("birth_chart")) intent = "birth_chart";
+        else if (result.includes("knowledge_lookup")) intent = "knowledge_lookup";
+    } catch (error) {
+        console.error("Cohere intent classification failed, falling back to general chat:", error);
+        intent = "chat";
+    }
 
     return { intent };
 }

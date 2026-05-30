@@ -69,21 +69,28 @@ USER QUESTION:
 ${state.message}
 `;
 
-  const response = await mistralChat.invoke(prompt);
-  if (!response) {
-    return {
-      error: "No response from AI",
+  try {
+    const response = await mistralChat.invoke(prompt);
+    if (!response) {
+      return {
+        error: "No response from AI",
+      }
     }
+
+    const content =
+      typeof response.content === "string"
+        ? response.content
+        : response.content
+          .map((c: any) => ("text" in c ? c.text : ""))
+          .join("");
+
+    return {
+      response: content.trim(),
+    };
+  } catch (error: any) {
+    console.error("Mistral chat invocation failed:", error);
+    return {
+      response: "I'm sorry, I'm having trouble connecting to my astro-knowledge systems. Please try again in a moment.",
+    };
   }
-
-  const content =
-    typeof response.content === "string"
-      ? response.content
-      : response.content
-        .map((c: any) => ("text" in c ? c.text : ""))
-        .join("");
-
-  return {
-    response: content.trim(),
-  };
 }
