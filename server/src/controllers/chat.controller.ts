@@ -22,7 +22,6 @@ export const chatHistory = async (req: any, res: any) => {
 export const addMessage = async (req: any, res: any) => {
   try {
     const { userId, role, content } = req.body;
-
     const chat = await Chat.findOne({ userId });
 
     if (!chat) {
@@ -35,8 +34,6 @@ export const addMessage = async (req: any, res: any) => {
     const result = await astroGraph.invoke({
       message: content
     });
-
-    console.log(result);
 
     if (result) {
       chat.messages.push({
@@ -56,7 +53,7 @@ export const addMessage = async (req: any, res: any) => {
 
     res.status(200).json({
       success: true,
-      response: "done",
+      response: result.response,
     });
   } catch (error) {
     console.log(error)
