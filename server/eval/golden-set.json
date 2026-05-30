@@ -57,17 +57,17 @@
   {
     "name": "Daily Horoscope",
     "message": "What is today's energy for me?",
-    "expectedIntent": "chat"
+    "expectedIntent": "daily_transits"
   },
   {
     "name": "Today's Transit",
     "message": "Tell me today's planetary influences",
-    "expectedIntent": "chat"
+    "expectedIntent": "daily_transits"
   },
   {
     "name": "Tomorrow Forecast",
     "message": "What do the stars suggest for tomorrow?",
-    "expectedIntent": "chat"
+    "expectedIntent": "daily_transits"
   },
   {
     "name": "Ascendant Meaning",

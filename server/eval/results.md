@@ -4,7 +4,7 @@ This project includes an evaluation harness to verify the reliability and correc
 
 ## Evaluation Categories
 
-### 1. Router Evaluation
+### 1. Golden-Set / Router Evaluation
 
 The router evaluation validates whether user queries are classified into the correct intent before being processed by the graph.
 
@@ -13,12 +13,13 @@ Examples:
 * "Tell me about my birth chart" → birth_chart
 * "What does my ascendant mean?" → knowledge_lookup
 * "Hello" → chat
+* "Current/future planetary influences" -> daily_transits
 
 Metrics:
 
-* Total Tests: 10
-* Passed: 9
-* Accuracy: 90%
+* Total Tests: 30
+* Passed: 28
+* Accuracy: 93.33%
 
 ---
 
@@ -108,7 +109,7 @@ Results:
 
 ## Running Evaluations
 
-Router Evaluation:
+Golden-Set /Router Evaluation:
 
 npm run eval
 
@@ -122,7 +123,7 @@ npm run eval:e2e
 
 | Evaluation Type       | Result |
 | --------------------- | ------ |
-| Router Evaluation     | PASS   |
+| Golden-Set            | PASS   |
 | Tool Evaluation       | PASS   |
 | End-to-End Evaluation | PASS   |
 
