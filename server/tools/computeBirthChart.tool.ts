@@ -10,6 +10,7 @@ type ComputeBirthChartInput = {
 export async function computeBirthChart(
     input: ComputeBirthChartInput
 ) {
+    console.log("TOOL NODE CALLED ---------------- BIRTHCHART")
     const token = await getProkeralaToken();
     const datetime = `${input.birthDate}T${input.birthTime}:00+05:30`;
     const coordinates = `${input.latitude},${input.longitude}`;

@@ -6,6 +6,7 @@ interface Location {
 }
 
 export async function geocodePlace(location: string): Promise<Location | null> {
+  console.log("TOOL NODE CALLED ---------------- GEOCODE")
   const url = "https://nominatim.openstreetmap.org/search";
 
   const response = await axios.get(url, {
