@@ -13,5 +13,3 @@ export const cohereChat = new ChatCohere({
     model:"command-a-03-2025",
     apiKey:process.env.COHERE_API_KEY!
 })
-
-// export {googleChat,mistralChat,cohereChat}
