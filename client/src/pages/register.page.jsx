@@ -17,7 +17,7 @@ const register = () => {
             const res = await api.post("/user", formData);
             if (res.status === 201) {
                 localStorage.setItem("astroUserId", res.data.userId);
-                navigate("/chat");
+                navigate("/");
             }
         } catch (error) {
             console.log("Error from register", error);
