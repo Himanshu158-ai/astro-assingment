@@ -1,6 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from "react-router-dom";
+import api from '../service/api.service';
 
 const register = () => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        name: "",
+        birthDate: "",
+        birthTime: "",
+        birthPlace: ""
+    })
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await api.post("/user", formData);
+            if (res.status === 201) {
+                localStorage.setItem("astroUserId", res.data.userId);
+                navigate("/chat");
+            }
+        } catch (error) {
+            console.log("Error from register", error);
+        }
+    }
+
+
     return (
         <div className="min-h-screen bg-[#F8F4EE]">
             <div className="max-w-6xl mx-auto px-6 py-12">
@@ -33,6 +57,8 @@ const register = () => {
                                 </label>
 
                                 <input
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     type="text"
                                     placeholder="Himanshu Singh"
                                     className="
@@ -55,6 +81,8 @@ const register = () => {
                                     </label>
 
                                     <input
+                                        value={formData.birthDate}
+                                        onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
                                         type="date"
                                         className="
                       w-full
@@ -74,6 +102,8 @@ const register = () => {
                                     </label>
 
                                     <input
+                                        value={formData.birthTime}
+                                        onChange={(e) => setFormData({ ...formData, birthTime: e.target.value })}
                                         type="time"
                                         className="
                       w-full
@@ -94,6 +124,8 @@ const register = () => {
                                 </label>
 
                                 <input
+                                    value={formData.birthPlace}
+                                    onChange={(e) => setFormData({ ...formData, birthPlace: e.target.value })}
                                     type="text"
                                     placeholder="Delhi, India"
                                     className="
@@ -110,6 +142,7 @@ const register = () => {
                             </div>
 
                             <button
+                                onClick={handleSubmit}
                                 className="
                   mt-8
                   inline-flex
