@@ -1,15 +1,12 @@
 import axios from "axios";
-import type { RunnableConfig } from "@langchain/core/runnables";
 
 interface Location {
   lat: number;
   lng: number;
 }
 
-export async function geocodePlace(location: string, config?: RunnableConfig): Promise<Location | null> {
+export async function geocodePlace(location: string): Promise<Location | null> {
   console.log("TOOL NODE CALLED ---------------- GEOCODE")
-  const send = config?.configurable?.send;
-  send?.("status", "Resolving location...");
   const url = "https://nominatim.openstreetmap.org/search";
 
   try {

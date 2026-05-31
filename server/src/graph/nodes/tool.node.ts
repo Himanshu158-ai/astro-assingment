@@ -1,12 +1,14 @@
 import type { AgentStateType } from "../state.js"
 import User from "../../models/user.js";
-import { geocodePlace } from "../../../tools/geocode.tool.js";
-import { computeBirthChart } from "../../../tools/computeBirthChart.tool.js";
-import { knowledgeLookup } from "../../../tools/knowledgeLookup.tool.js";
+import { geocodePlace } from "../../tools/geocode.tool.js";
+import { computeBirthChart } from "../../tools/computeBirthChart.tool.js";
+import { knowledgeLookup } from "../../tools/knowledgeLookup.tool.js";
+import type { RunnableConfig } from "@langchain/core/runnables";
 
-export async function toolNode(state: AgentStateType) {
+export async function toolNode(state: AgentStateType, config:RunnableConfig) {
   console.log("TOOLNODE");
-  console.log(state.intent);
+  // console.log(state.intent);
+  const send = config?.configurable?.send;
 
   try {
     const user = await User.findById(state.userId);
@@ -18,16 +20,19 @@ export async function toolNode(state: AgentStateType) {
       }
     }
 
+    send?.("status", "Geocoding birth place...");
     const coords = await geocodePlace(
       user.birthPlace
     );
 
+    
     if (!coords) {
       return {
         error: `Could not find coordinates for birth place: ${user.birthPlace}`,
       }
     }
 
+    send?.("status", "Computing birth chart...");
     const chart = await computeBirthChart({
       birthDate: user.birthDate,
       birthTime: user.birthTime,
@@ -42,6 +47,7 @@ export async function toolNode(state: AgentStateType) {
       };
     }
 
+    send?.("status", "Looking up knowledge...");
     if (state.intent === "knowledge_lookup") {
       const knowledge = await knowledgeLookup(
         chart.ascendant

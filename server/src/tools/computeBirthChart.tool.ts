@@ -1,6 +1,4 @@
-
-import { getProkeralaToken } from "../src/services/prokeralaAuth.js";
-import type { RunnableConfig } from "@langchain/core/runnables";
+import { getProkeralaToken } from "../services/prokeralaAuth.js";
 
 type ComputeBirthChartInput = {
     birthDate: string;
@@ -10,12 +8,9 @@ type ComputeBirthChartInput = {
 };
 
 export async function computeBirthChart(
-    input: ComputeBirthChartInput,
-    config?: RunnableConfig
+    input: ComputeBirthChartInput
 ) {
     console.log("TOOL NODE CALLED ---------------- BIRTHCHART")
-    const send = config?.configurable?.send;
-    send?.("status", "Computing birth chart...");
     try {
         const token = await getProkeralaToken();
         const datetime = `${input.birthDate}T${input.birthTime}:00+05:30`;
@@ -40,7 +35,7 @@ export async function computeBirthChart(
         }
 
         const data = await response.json();
-        
+
         if (!data || data.status !== "ok") {
             console.error("Prokerala API Response status is not ok:", data);
             throw new Error(data?.error?.message || "Prokerala API Error");

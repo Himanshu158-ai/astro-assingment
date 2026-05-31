@@ -1,6 +1,6 @@
-import { geocodePlace } from "../tools/geocode.tool.js";
-import { computeBirthChart } from "../tools/computeBirthChart.tool.js";
-import { knowledgeLookup } from "../tools/knowledgeLookup.tool.js";
+import { geocodePlace } from "../src/tools/geocode.tool.js";
+import { computeBirthChart } from "../src/tools/computeBirthChart.tool.js";
+import { knowledgeLookup } from "../src/tools/knowledgeLookup.tool.js";
 
 async function testGeocode() {
     console.log("\n=== GEOCODE TEST ===");
@@ -49,7 +49,7 @@ async function testGeocode() {
 
     console.log("\n=== KNOWLEDGE TEST ===");
 
-    
+
     const reslt = await knowledgeLookup(
         "Tula"
     );

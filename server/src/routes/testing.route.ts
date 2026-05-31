@@ -1,7 +1,7 @@
 import express from "express"
-import { geocodePlace } from "../../tools/geocode.tool.js"
-import {computeBirthChart} from "../../tools/computeBirthChart.tool.js"
-import {knowledgeLookup} from "../../tools/knowledgeLookup.tool.js"
+import { geocodePlace } from "../tools/geocode.tool.js"
+import { computeBirthChart } from "../tools/computeBirthChart.tool.js"
+import { knowledgeLookup } from "../tools/knowledgeLookup.tool.js"
 
 
 

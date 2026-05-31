@@ -125,7 +125,7 @@ export default function ChatPage() {
               </div>
             )}
             <div className="w-9 h-9 rounded-full bg-stone-900 text-white flex items-center justify-center text-sm font-medium tracking-wide shadow-sm">
-              {name ? name.charAt(0).toUpperCase() : "A"}
+              A<span className="text-orange-300 font-extrabold">C</span>
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function ChatPage() {
                 <div className="bg-white border border-stone-100 rounded-[20px] rounded-tl-md shadow-sm px-5 py-4">
                   {statusText ? (
                     <p
-                      className="text-[13.5px] text-stone-400 italic animate-pulse"
+                      className="text-[13.5px] text-stone-400 italic animate-pulse text-orange-400"
                       style={{ fontFamily: "'Georgia', serif" }}
                     >
                       {statusText}
