@@ -1,9 +1,8 @@
 import React from 'react'
-import Register from './pages/register.page'
 
 const App = () => {
   return (
-    <Register />
+    <div>App</div>
   )
 }
 
