@@ -1,61 +1,170 @@
 # AstroAgent – Agentic AI Astrology Companion
 
-AstroAgent is a conversational astrology companion built as part of the Aradhana Full-Stack Builder Take-Home Assignment.
+AstroAgent is an AI-powered astrology companion built as part of the Aradhana Full-Stack Builder Take-Home Assignment.
 
-The project combines an agent-based backend built with LangGraph and a modern React frontend to provide personalized astrological guidance using real birth chart data and tool-driven reasoning.
+The project combines a LangGraph-based agent backend with a React frontend to deliver personalized astrological guidance using real chart computation, tool-driven reasoning, and transparent agent execution.
 
 ---
 
-## Features
+# Demo
 
-### Agentic Backend
+The application allows users to:
 
-Built using LangGraph with:
+* Enter birth details
+* Generate a natal chart
+* Ask astrology-related questions
+* Receive chart-based responses
+* Observe tool execution in real time through Server-Sent Events (SSE)
 
-* Stateful agent workflow
-* Intent routing
-* Tool calling
-* Conditional graph execution
-* Structured reasoning flow
+---
 
-### Tools Implemented
+# Architecture
 
-#### 1. compute_birth_chart()
+The backend is implemented as a stateful LangGraph workflow.
 
-Generates a user's natal chart using real astrological calculations.
+## Agent Flow
 
-Returns:
+```text
+User Message
+      │
+      ▼
+ ┌────────────┐
+ │ RouterNode │
+ └────────────┘
+      │
+      ▼
+ Intent Classification
+      │
+ ┌────┴──────────┐
+ │               │
+ ▼               ▼
+
+Birth Chart   Knowledge Lookup
+Intent          Intent
+
+ │               │
+ ▼               ▼
+
+Tools        Knowledge Tool
+
+ └──────┬────────┘
+        ▼
+
+  Reasoning Node
+        │
+        ▼
+
+ Final Response
+```
+
+---
+
+# LangGraph Components
+
+## Router Node
+
+Responsible for classifying incoming user messages into supported intents.
+
+Supported intents:
+
+* birth_chart
+* knowledge_lookup
+* chat
+
+Examples:
+
+| User Query                 | Intent           |
+| -------------------------- | ---------------- |
+| Tell me about my moon sign | birth_chart      |
+| What does ascendant mean?  | knowledge_lookup |
+| Hello                      | chat             |
+
+---
+
+## Reasoning Node
+
+Responsible for:
+
+* Interpreting tool results
+* Generating final responses
+* Maintaining conversational flow
+* Applying safety guardrails
+
+---
+
+# Tools Implemented
+
+The assignment required implementation of at least three tools.
+
+## 1. compute_birth_chart()
+
+Generates a natal chart using real birth details.
+
+Input:
+
+* Date of Birth
+* Time of Birth
+* Place of Birth
+
+Output:
 
 * Planetary positions
+* Ascendant
 * Houses
-* Ascendant information
-* Core chart metadata
+* Chart metadata
 
-#### 2. geocode_place()
+---
 
-Converts a place name into:
+## 2. geocode_place()
+
+Converts a birth location into geographical coordinates.
+
+Output:
 
 * Latitude
 * Longitude
-* Timezone information
+* Timezone
 
-Used to support accurate birth chart calculations.
-
-#### 3. knowledge_lookup()
-
-Retrieves astrology knowledge from a curated knowledge base.
-
-Used for:
-
-* Astrology concepts
-* Sign meanings
-* Planet explanations
-* House interpretations
-* Educational queries
+Used to support accurate chart calculations.
 
 ---
 
-## Frontend
+## 3. knowledge_lookup()
+
+Retrieves astrology knowledge from a curated knowledge base.
+
+Examples:
+
+* Ascendant meaning
+* Zodiac explanations
+* House interpretations
+* Planetary symbolism
+
+---
+
+# Real-Time Streaming
+
+The application uses Server-Sent Events (SSE).
+
+This enables:
+
+* Streaming responses
+* Live tool execution updates
+* Improved transparency
+
+Example:
+
+```text
+Computing birth chart...
+Looking up astrology knowledge...
+Generating response...
+```
+
+Users can observe which tool is currently executing before the final response is delivered.
+
+---
+
+# Frontend
 
 Built using:
 
@@ -65,68 +174,45 @@ Built using:
 
 Features:
 
-* Birth details registration flow
-* Responsive chat interface
-* Real-time streaming responses
+### Registration Flow
+
+Users provide:
+
+* Full Name
+* Birth Date
+* Birth Time
+* Birth Place
+
+### Protected Chat Route
+
+Users cannot access the chat experience without completing birth registration.
+
+### Responsive Chat Experience
+
+Supports:
+
+* Desktop
+* Tablet
+* Mobile
+
+### Streaming UI
+
+Displays:
+
+* Live responses
+* Tool activity
 * Loading states
-* Error handling
-* Protected routes
-* Conversation experience inspired by modern AI assistants
+* Error states
 
 ---
 
-## Real-Time Tool Visibility
+# Evaluation
 
-Server-Sent Events (SSE) are used to stream agent activity to the frontend.
-
-Users can see:
-
-* When a tool is being called
-* Which tool is currently executing
-* Streaming AI responses
-* Agent progress in real time
-
-Example:
-
-Computing birth chart...
-
-Looking up astrology knowledge...
-
-Generating response...
-
-This improves transparency and user trust.
+Evaluation was treated as a core deliverable rather than a final-stage activity.
 
 ---
 
-## Architecture
-
-User Message
-↓
-Router Node
-↓
-Intent Classification
-↓
-Conditional Routing
-↓
-Tool Execution
-↓
-Reasoning Node
-↓
-Final Response
-
-### Supported Intents
-
-* birth_chart
-* knowledge_lookup
-* chat
-
----
-
-## Evaluation Strategy
-
-The evaluation process was treated as a first-class deliverable.
-
-### Router Evaluation
+## Golden Dataset
 
 A versioned golden dataset containing 30 representative prompts was created.
 
@@ -134,69 +220,68 @@ Categories included:
 
 * Greetings
 * Birth chart requests
-* Astrology knowledge queries
-* Career questions
-* Relationship questions
-* Off-topic prompts
+* Astrology concepts
+* Career guidance
+* Relationship guidance
+* Off-topic queries
+* Prompt injection attempts
 * Safety-sensitive prompts
-* Invalid input scenarios
+
+---
+
+## Router Evaluation
 
 ### Results
 
-Total Cases: 30
+| Metric      | Value  |
+| ----------- | ------ |
+| Total Tests | 30     |
+| Passed      | 28     |
+| Failed      | 2      |
+| Accuracy    | 93.33% |
 
-Passed: 28
-
-Failed: 2
-
-Router Accuracy: 93.33%
+The router successfully classified the majority of representative user queries.
 
 ---
 
 ## Tool Testing
 
-Individual tool validation was performed for:
+Each tool was tested independently.
 
-### compute_birth_chart
+### Tested
 
-Verified:
+* compute_birth_chart
+* geocode_place
+* knowledge_lookup
 
-* Correct chart generation
-* Birth detail validation
+Validation covered:
+
+* Successful execution
+* Invalid inputs
 * Error handling
-
-### geocode_place
-
-Verified:
-
-* Location lookup
-* Invalid location handling
-
-### knowledge_lookup
-
-Verified:
-
-* Retrieval quality
-* Response consistency
 
 ---
 
 ## End-to-End Testing
 
-Complete workflow testing was performed covering:
+Complete user workflows were tested.
 
-1. User registration
-2. Birth chart generation
-3. Tool invocation
-4. Knowledge lookup
-5. Response generation
-6. Streaming delivery
+### Covered Flows
 
-All primary user flows completed successfully.
+1. Registration
+2. Birth Chart Generation
+3. Tool Invocation
+4. Knowledge Lookup
+5. Response Generation
+6. Streaming Delivery
+
+All primary user journeys completed successfully.
 
 ---
 
-## Safety Guardrails
+# Safety Guardrails
+
+Astrology should be used for reflection and guidance.
 
 The assistant does not provide:
 
@@ -204,101 +289,113 @@ The assistant does not provide:
 * Financial certainty
 * Legal certainty
 
-Astrology responses are presented as guidance and reflection rather than factual prediction.
-
-Prompt-injection attempts are handled safely through routing and response constraints.
+Prompt injection attempts are safely handled through routing and response constraints.
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-### Backend
+## Backend
 
 * Node.js
-* Express
+* Express.js
 * LangGraph
 * Cohere
-* SSE
+* Server-Sent Events (SSE)
 
-### Frontend
+## Frontend
 
 * React
 * Tailwind CSS
 * React Router
 
-### Evaluation
+## Evaluation
 
-* Custom evaluation harness
-* Golden dataset
-* Automated router testing
-* Tool testing
-* End-to-end testing
-
----
-
-## Project Structure
-
-server/
-├── graph/
-├── nodes/
-├── tools/
-├── routes/
-├── evaluations/
-
-client/
-├── pages/
-├── components/
-├── services/
-├── hooks/
+* Golden Test Dataset
+* Router Testing
+* Tool Testing
+* End-to-End Testing
 
 ---
 
-## Running Locally
+# Project Structure
 
-### Backend
+```text
+astro-agent/
 
+├── client/
+│   ├── pages/
+│   ├── components/
+│   ├── services/
+│   └── routes/
+│
+├── server/
+│   ├── graph/
+│   ├── nodes/
+│   ├── tools/
+│   ├── routes/
+│   └── evaluations/
+│
+├── evaluation/
+│   ├── golden-set.jsonl
+│   ├── scorecard.md
+│   └── results.json
+│
+├── README.md
+└── EVALUATION.md
+```
+
+---
+
+# Local Setup
+
+## Backend
+
+```bash
+cd server
 npm install
-
 npm run dev
+```
 
-### Frontend
+## Frontend
 
+```bash
+cd client
 npm install
-
 npm run dev
+```
 
 ---
 
-## Known Limitations
+# Known Limitations
 
 * Daily transit calculations are not currently implemented.
 * Conversation memory is session-scoped.
-* Knowledge base size is intentionally small for evaluation purposes.
+* Knowledge base is intentionally small for evaluation purposes.
+* Router classification still has a small number of edge-case failures.
 
 ---
 
-## Future Improvements
+# Future Improvements
 
 * Daily transit tool integration
-* Long-term memory
+* Persistent memory
 * Expanded astrology knowledge base
 * Tool result caching
 * Multi-agent workflow
-* Personalized recommendations
+* Advanced evaluation metrics
 
 ---
 
-## Reflection
+# Reflection
 
-A major focus of this project was building a transparent and testable agent rather than relying solely on model-generated responses.
+This project focused on building a transparent and testable AI agent rather than relying solely on model-generated responses.
 
-The combination of:
+Key priorities included:
 
-* LangGraph routing
-* Tool-driven reasoning
-* Real-time streaming
+* Tool-grounded reasoning
+* Clear routing logic
+* Real-time visibility into agent execution
 * Evaluation-driven development
 
-resulted in a system that is both observable and measurable.
-
-Given additional time, the next priority would be implementing real-time transit analysis and expanding evaluation coverage further.
+The combination of LangGraph, structured tools, SSE streaming, and automated evaluation produced a system that is observable, measurable, and extensible.
