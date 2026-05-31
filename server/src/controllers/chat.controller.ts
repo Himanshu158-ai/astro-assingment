@@ -20,6 +20,17 @@ export const chatHistory = async (req: any, res: any) => {
 };
 
 export const addMessage = async (req: any, res: any) => {
+
+  res.setHeader("Content-Type", "text/event-stream");
+  res.setHeader("Cache-Control", "no-cache");
+  res.setHeader("Connection", "keep-alive");
+  res.flushHeaders();
+
+  const send = (type: string, data: any) => {
+    res.write(`data: ${JSON.stringify({ type, data })}\n\n`);
+  };
+
+
   try {
     const { userId, role } = req.body;
     const userMessageContent = req.body.content || req.body.message;
@@ -34,7 +45,10 @@ export const addMessage = async (req: any, res: any) => {
 
     const result = await astroGraph.invoke({
       userId,
-      message: userMessageContent
+      message: userMessageContent,
+    }, { configurable: {
+        send: send
+      }
     });
 
     if (!result.response) {
@@ -56,10 +70,12 @@ export const addMessage = async (req: any, res: any) => {
     await chat.save();
     console.log("DONE");
 
-    res.status(200).json({
-      success: true,
-      response: result.response,
+    send("end", {
+      finalResponse: result.response,
     });
+
+    res.end();
+
   } catch (error: any) {
     console.log(error)
     res.status(500).json({

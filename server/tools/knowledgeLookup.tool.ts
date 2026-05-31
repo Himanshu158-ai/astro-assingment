@@ -1,7 +1,10 @@
 import { signKnowledge } from "../src/knowledge/signs.js";
+import type { RunnableConfig } from "@langchain/core/runnables";
 
-export async function knowledgeLookup(sign: string | undefined) {
+export async function knowledgeLookup(sign: string | undefined, config?: RunnableConfig) {
   console.log("TOOL NODE CALLED ---------------- KNOWLEDGE")
+  const send = config?.configurable?.send;
+  send?.("status", "Looking up knowledge...");
   if (!sign) {
     return {
       sign: "",

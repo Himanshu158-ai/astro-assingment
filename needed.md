@@ -1,0 +1,1 @@
+config?: { configurable?: { send?: (type: string, data: any) => void } }

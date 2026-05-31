@@ -9,6 +9,7 @@ export default function ChatPage() {
   const [name, setName] = useState(localStorage.getItem("astroUserName"));
   const bottomRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [statusText, setStatusText] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,28 +19,55 @@ export default function ChatPage() {
     setmessages((prev) => [...prev, userMessage]);
     setques("");
     setIsLoading(true);
+    setStatusText("Thinking...");
 
     try {
-      const res = await api.post("/chat/message", {
-        userId,
-        role: "user",
-        content: userMessage.content,
+      const response = await fetch("http://localhost:3000/api/chat/message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, role: "user", content: userMessage.content }),
       });
-      setmessages((prev) => [
-        ...prev,
-        { role: "assistant", content: res.data.response },
-      ]);
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop(); // incomplete line baad mein aayegi
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          try {
+            const { type, data } = JSON.parse(line.slice(6));
+
+            if (type === "status") {
+              setStatusText(data);
+            } else if (type === "end") {
+              setmessages((prev) => [
+                ...prev,
+                { role: "assistant", content: data.finalResponse },
+              ]);
+              setIsLoading(false);
+              setStatusText("");
+            }
+          } catch (err) {
+            // skip
+          }
+        }
+      }
     } catch (error) {
       console.log(error);
       setmessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content: "Something went wrong. Please try again.",
-        },
+        { role: "assistant", content: "Something went wrong. Please try again." },
       ]);
-    } finally {
       setIsLoading(false);
+      setStatusText("");
     }
   };
 
@@ -57,7 +85,7 @@ export default function ChatPage() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, statusText]);
 
   return (
     <div className="h-screen bg-[#F5F0E8] flex flex-col overflow-hidden">
@@ -128,19 +156,16 @@ export default function ChatPage() {
                   key={index}
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  {/* Assistant avatar dot */}
                   {msg.role === "assistant" && (
                     <div className="w-7 h-7 rounded-full bg-orange-100 border border-orange-200 flex items-center justify-center mr-3 mt-1 shrink-0">
                       <span className="text-[10px]">✦</span>
                     </div>
                   )}
-
                   <div
-                    className={`max-w-[78%] md:max-w-[65%] px-5 py-4 ${
-                      msg.role === "user"
+                    className={`max-w-[78%] md:max-w-[65%] px-5 py-4 ${msg.role === "user"
                         ? "bg-stone-900 text-stone-100 rounded-[20px] rounded-tr-md shadow-sm"
                         : "bg-white text-stone-700 rounded-[20px] rounded-tl-md border border-stone-100 shadow-sm"
-                    }`}
+                      }`}
                   >
                     <p
                       className="leading-relaxed text-[14.5px]"
@@ -174,11 +199,20 @@ export default function ChatPage() {
                   <span className="text-[10px]">✦</span>
                 </div>
                 <div className="bg-white border border-stone-100 rounded-[20px] rounded-tl-md shadow-sm px-5 py-4">
-                  <div className="flex gap-1.5 items-center h-4">
-                    <span className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                  </div>
+                  {statusText ? (
+                    <p
+                      className="text-[13.5px] text-stone-400 italic animate-pulse"
+                      style={{ fontFamily: "'Georgia', serif" }}
+                    >
+                      {statusText}
+                    </p>
+                  ) : (
+                    <div className="flex gap-1.5 items-center h-4">
+                      <span className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <span className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <span className="w-1.5 h-1.5 bg-stone-300 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -208,7 +242,6 @@ export default function ChatPage() {
               <Send size={15} />
             </button>
           </div>
-
           <p className="text-center text-[11px] text-stone-400 mt-3 tracking-wide">
             Astrology is for guidance and reflection, not medical, legal, or financial certainty.
           </p>
