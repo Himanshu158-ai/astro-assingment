@@ -6,8 +6,6 @@ import { knowledgeLookup } from "../../tools/knowledgeLookup.tool.js";
 import type { RunnableConfig } from "@langchain/core/runnables";
 
 export async function toolNode(state: AgentStateType, config:RunnableConfig) {
-  console.log("TOOLNODE");
-  // console.log(state.intent);
   const send = config?.configurable?.send;
 
   try {

@@ -10,7 +10,7 @@ type ComputeBirthChartInput = {
 export async function computeBirthChart(
     input: ComputeBirthChartInput
 ) {
-    console.log("TOOL NODE CALLED ---------------- BIRTHCHART")
+    
     try {
         const token = await getProkeralaToken();
         const datetime = `${input.birthDate}T${input.birthTime}:00+05:30`;

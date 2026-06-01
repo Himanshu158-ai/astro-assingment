@@ -68,8 +68,7 @@ export const addMessage = async (req: any, res: any) => {
     });
 
     await chat.save();
-    console.log("DONE");
-
+    
     send("end", {
       finalResponse: result.response,
     });

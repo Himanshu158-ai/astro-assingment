@@ -1,7 +1,6 @@
 import { signKnowledge } from "../knowledge/signs.js";
 
 export async function knowledgeLookup(sign: string | undefined) {
-  console.log("TOOL NODE CALLED ---------------- KNOWLEDGE")
   if (!sign) {
     return {
       sign: "",

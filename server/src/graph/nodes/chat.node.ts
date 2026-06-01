@@ -4,10 +4,8 @@ import type { RunnableConfig } from "@langchain/core/runnables";
 
 export async function chatNode(state: AgentStateType,config:RunnableConfig) {
 
-  console.log("CHATNODE");
   const send = config?.configurable?.send;
   send?.("status", "Loading final response");
-  console.log(JSON.stringify(state, null, 2))
 
   if (state.error) {
     return {

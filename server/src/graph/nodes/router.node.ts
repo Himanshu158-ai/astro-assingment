@@ -3,8 +3,6 @@ import { cohereChat } from "../../config/llm.models.js";
 
 export async function routerNode(state: AgentStateType) {
 
-    console.log("ROUTERNODE");
-
     let intent = "chat";
     const prompt = `
 You are an intent classifier.

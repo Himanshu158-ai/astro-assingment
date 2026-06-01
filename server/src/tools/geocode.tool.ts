@@ -6,7 +6,6 @@ interface Location {
 }
 
 export async function geocodePlace(location: string): Promise<Location | null> {
-  console.log("TOOL NODE CALLED ---------------- GEOCODE")
   const url = "https://nominatim.openstreetmap.org/search";
 
   try {
@@ -17,7 +16,7 @@ export async function geocodePlace(location: string): Promise<Location | null> {
         limit: 1
       },
       headers: {
-        "User-Agent": "AstroTask/1.0"  // Nominatim requires this
+        "User-Agent": "AstroTask/1.0" 
       }
     });
 
